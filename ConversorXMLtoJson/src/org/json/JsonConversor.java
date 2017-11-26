@@ -8,7 +8,7 @@ public class JsonConversor {
 
 	static String text1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 	static String text2 = "\"<ns0:xxxxxxx xmlns:ns0=\\\"xxxxxxx\\\">\\n\"";
-	static String text3 = "  <nro_oc>2000</nro_oc>\n";
+	static String text3 = "  <nro_oc/>";
 	static String text4 = "  <proveedor>4100</proveedor>\n";
 	static String text5 = "</ns0:xxxxxxx> ";;
 
@@ -24,15 +24,20 @@ public class JsonConversor {
 		xml.add(text2);
 		xml.add(text3);
 		xml.add(text4);
-		xml.add(text5);		
-		
+		xml.add(text5);
+
 		JSONObject obj = new JSONObject();
 		for (String tag : tags) {
 			for (String line : xml) {
-				if (line.contains(tag)) {
+				if (line.contains("<" + tag + ">")) {
 					String result = line.split("<" + tag + ">")[1].split("</" + tag + ">")[0];
-					obj.put(tag, result);
-					
+					try {
+						obj.put(tag, result);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} else if (line.contains("<" + tag + "/>")) {
+					obj.put(tag, " ");
 				}
 			}
 		}
